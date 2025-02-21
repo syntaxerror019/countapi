@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import redis
+from flask_cors import CORS
 
 
 class Server:
@@ -25,6 +26,7 @@ class Server:
 
 
 app = Flask(__name__)
+CORS(app)
 
 r = Server(
   host='rich-deer-51846.upstash.io',
