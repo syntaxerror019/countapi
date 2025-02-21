@@ -30,6 +30,7 @@ html {
     background: linear-gradient(90deg, #1c5b8f, #1c5b8f);
     color: white;
     padding: 30px 0;
+    z-index: 1000;
   }
   
   header .container {
