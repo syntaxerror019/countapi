@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import redis
 from flask_cors import CORS
+import os
 
 
 class Server:
@@ -29,9 +30,9 @@ app = Flask(__name__)
 CORS(app)
 
 r = Server(
-  host='rich-deer-51846.upstash.io',
+  host=os.getenv("UPSTASH_URL", "localhost"),
   port=6379,
-  password='AcqGAAIjcDE4YzRjYTJmZmFiYTI0YzYwYmI1YWFjMWFhNGFkMWE5YXAxMA',
+  password=os.getenv("UPSTASH_PASSWORD", "sdfg876ih564hljhl45vh34mncj465fghfj5go435ygjh"),
   ssl=True
 )
 
