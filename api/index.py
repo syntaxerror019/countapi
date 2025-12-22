@@ -4,6 +4,8 @@ import redis
 import urllib.parse
 import os
 
+# Version 2.0
+
 app = Flask(__name__)
 CORS(app)
 
