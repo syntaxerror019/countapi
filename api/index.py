@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 import redis
 import urllib.parse
@@ -61,6 +61,14 @@ def before_request():
 @app.route('/')
 def index():
     return render_template('index.html', hits=r.get('count.api.page.hits') or 0, info=r.client.info())
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, 'static'),
+        'icon.png',
+        mimetype='image/png'
+    )
 
 @app.route('/api/v1/get/<key>', methods=['GET'])
 def get_handler(key):
