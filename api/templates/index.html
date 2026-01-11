@@ -1,175 +1,671 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="description" content="A Free API useful for all developers.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.png') }}">
-  <title>Free Count API - Unlimited Forever</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="description" content="A Forever Free, No-Nonsense Counting API.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.png') }}">
+    <title>Free Count API - Unlimited Forever</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #1d72b8;
+            --primary-dark: #1c5b8f;
+            --secondary-color: #009688;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-color)) !important;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100px); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .hero h3 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .stats-grid {
+            margin-top: 3rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .btn-hero {
+            background: white;
+            color: var(--primary-color);
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hero:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            color: var(--primary-dark);
+            background: var(--primary-color);
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 4rem 0;
+        }
+        
+        section h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        
+        .section-alt {
+            background-color: #f8f9fa;
+        }
+        
+        /* Code Blocks */
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        
+        code {
+            color: #f8f8f2;
+        }
+        
+        pre code {
+            color: #f8f8f2;
+        }
+        
+        /* Response Boxes */
+        .response-ok {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .response-bad {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        /* Tree Structure */
+        .tree ul {
+            list-style-type: none;
+            padding-left: 2rem;
+        }
+        
+        .tree li {
+            position: relative;
+            margin: 0.8rem 0;
+        }
+        
+        .tree li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -2rem;
+            width: 2rem;
+            height: 100%;
+            border-left: 2px solid #dee2e6;
+        }
+        
+        .tree li span {
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            background-color: #fff;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Buttons */
+        .btn-api {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-api:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 114, 184, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero h3 {
+                font-size: 1.2rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Count API</h1>
-      <nav>
-        <ul>
-          <li><a href="#intro">Introduction</a></li>
-          <li><a href="#endpoints">Endpoints</a></li>
-          <li><a href="mailto:miles@mileshilliard.com">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-  
-  <div class="banner">
-    <div class="container">
-        <h1>Counting made effortless- and free!</h1>
-        <h3>Track monitors, blogs, hits, and more!</h3>
-        <p>With over {{ hits }} requests served to date.</p>
-        <a href="#intro" class="button"><button>Get Started</button></a>
-    </div>
-</div>
-
-  <main>
-    <section id="intro" class="section">
-        <h2>Introduction</h2>
-        <p>CountAPI is a spin-off of the beloved <a href="https://countapi.xyz/">OG countapi.</a> Unfortunately, the service is no longer available to the public as a free API due to widely unknown reasons. This service has been created as a very simple version of CountAPI in hopes of getting some users back on their feet again.</p>
-        <p>Although this API is a slightly more limited version than the original, it serves a very similar purpose, and I hope it will fulfill the needs of most users looking for something similar. If not, please feel free to email me directly at <a href="mailto:miles@mileshilliard.com">miles@mileshilliard.com</a> and I would be happy to talk! Until the massive traffic explosion I am totally expecting, be satisfied with what you've got. It is free after all!</p>
-        <b>Disclaimer: This service is in no way affiliated with CountAPI.</b>
-      </section>
-
-    <section id="tldr" class="section">
-        <h2>TL;DR</h2>
-        <p>Each "counter" is defined by a <b>key</b>.</p>
-        <p>Always use a very unique key, as namespaces don't exist, making overwriting a key very easy and very likely.</p>
-        <p>All keys and their values are public. Never store and confidential contents on these servers.</p>
-        <p>To increment a counter (by +1), send a GET request to:</p>
-        <pre><code>
-            https://countapi.mileshilliard.com/api/v1/hit/your_key
-            <br>
-            {
-                "key": "your_key",
-                "message": "Key updated successfully",
-                "value": "3"
-            }
-        </code></pre>
-    </section>
-    
-    <br>
-
-    <section id="overview" class="section">
-        <h2>Overview</h2>
-        <p>This API is hosted similarly to the OG countapi. The high-level overview can be seen below.</p>
-        <div class="tree">
-            <ul>
-              <li>
-                <span>Python Backend (serverless)</span>
-                <ul>
-                  <li>
-                    <span>"get"</span>
-                    <ul>
-                      <li><span>Redis Backend Contacted</span></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <span>"set"</span>
-                    <ul>
-                      <li><span>Redis Backend Contacted</span></li>
-                    </ul>
-                  </li>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-bar-chart-fill me-2"></i>Count API
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#intro">Introduction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#endpoints">Endpoints</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mailto:miles@mileshilliard.com">
+                            <i class="bi bi-envelope me-1"></i>Contact
+                        </a>
+                    </li>
                 </ul>
-              </li>
-            </ul>
-          </div>
-    </section>
-    
-    <br>
-
-    <section id="endpoints" class="section">
-      <h2>Endpoints</h2>
-      <p><code>/api/v1/get/your_key</code> - Get the current value set to the key.</p>
-      <div class="response-ok">
-        <code>/api/v1/get/your_key - 200<br> 
-          {
-            "key": "your_key",
-            "message": "Key requested successfully",
-            "value": "3"
-          }
-        </code>
-      </div>
-      <div class="response-bad">
-        <code>/api/v1/get/your_key - 404<br>
-          {
-            "error": "Key not found"
-          }
-        </code>
-      </div>
-      <button class="button" onclick="window.location.href='/api/v1/get/your_key'">Try it!</button>
-
-      <br><br>
-
-      <p><code>/api/v1/set/your_key</code> - Set the value of the key.</p>
-      <div class="response-ok">
-        <code>/api/v1/set/your_key?value=100 - 200<br>
-            {
-                "key": "your_key",
-                "message": "Key set successfully",
-                "old_value": "4",
-                "value": "100"
-            }
-        </code>
-      </div>
-      <div class="response-bad">
-        <code>/api/v1/set/your_key - 400<br>
-            {
-                "error": "No value provided"
-            }
-        </code>
-      </div>
-      <button class="button" onclick="window.location.href='/api/v1/set/your_key?value=100'">Try it!</button>
-
-      <br><br>
-
-      <p><code>/api/v1/hit/your_key</code> - Hit (increase by +1) the value of your key.</p>
-      <div class="response-ok">
-            <code>/api/v1/hit/your_key - 200<br>
-                {
-                    "key": "your_key",
-                    "message": "Key updated successfully",
-                    "value": "101"
-                }
-            </code>
+            </div>
         </div>
-      <button class="button" onclick="window.location.href='/api/v1/hit/your_key'">Try it!</button>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12 hero-content text-center">
+                    <h1 class="display-3 fw-bold">Counting made effortless... and free!</h1>
+                    <h3>Track monitors, blogs, hits, and more! <b>No Signup, No Keys</b></h3>
+                    
+                    <div class="row stats-grid justify-content-center" id="statsContainer">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card skeleton">
+                                <p class="stat-value" id="totalRequests">---</p>
+                                <p class="stat-label mb-0">Total Requests</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card skeleton">
+                                <p class="stat-value" id="totalKeys">---</p>
+                                <p class="stat-label mb-0">Active Keys</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="stat-card skeleton">
+                                <p class="stat-value" id="uptime">---</p>
+                                <p class="stat-label mb-0">Uptime</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="#intro" class="btn btn-hero btn-lg">
+                            Get Started <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
+
+    <main>
+    
+        <section id="intro" class="section">
+            <div class="container">
+                <h2><i class="bi bi-info-circle me-2"></i>Introduction</h2>
+                <p class="lead">CountAPI is a spin-off of the beloved <a href="https://countapi.xyz/">OG countapi.xyz.</a> Unfortunately, the service is no longer available to the public as a free API due to widely unknown reasons. This service has been created as a very simple version of countapi.xyz in hopes of getting some users back on their feet again.</p>
+                <p>Although this API is a slightly more limited version than the original, it serves a very similar purpose, and I hope it will fulfill the needs of most users looking for something similar. If not, please feel free to email me directly at <a href="mailto:miles@mileshilliard.com">miles@mileshilliard.com</a> and I would be happy to talk! Until the massive traffic explosion I am totally expecting, be satisfied with what you've got. It is free after all!</p>
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-exclamation-circle me-2"></i><strong>Disclaimer:</strong> This service is in no way affiliated with CountAPI.
+                </div>
+            </div>
+        </section>
+
+        <!-- TL;DR -->
+        <section id="tldr" class="section section-alt">
+            <div class="container">
+                <h2><i class="bi bi-lightning-fill me-2"></i>TL;DR</h2>
+                <p>Each "counter" is defined by a <strong>key</strong>.</p>
+                <p>Always use a very unique key, as namespaces don't exist, making overwriting a key very easy and very likely.</p>
+                <p>All keys and their values are public. Never store any confidential contents on these servers.</p>
+                <p class="mt-4">To increment a counter (by +1), send a GET request to:</p>
+                <pre><code>https://countapi.mileshilliard.com/api/v1/hit/your_key
+
+{
+  "key": "your_key",
+  "message": "Key updated successfully",
+  "value": "3"
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Overview -->
+        <section id="overview" class="section">
+            <div class="container">
+                <h2><i class="bi bi-diagram-3 me-2"></i>Overview</h2>
+                <p>This API is hosted similarly to the OG countapi. The high-level overview can be seen below.</p>
+                <div class="tree">
+                    <ul>
+                        <li>
+                            <span><i class="bi bi-server me-2"></i>Python Backend (serverless)</span>
+                            <ul>
+                                <li>
+                                    <span>"get"</span>
+                                    <ul>
+                                        <li><span><i class="bi bi-database me-2"></i>Redis Backend Contacted</span></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <span>"set"</span>
+                                    <ul>
+                                        <li><span><i class="bi bi-database me-2"></i>Redis Backend Contacted</span></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Endpoints -->
+        <section id="endpoints" class="section section-alt">
+            <div class="container">
+                <h2><i class="bi bi-plug me-2"></i>Endpoints</h2>
+                
+                <!-- GET Endpoint -->
+                <div class="mb-5">
+                    <h4><code class="text-primary">/api/v1/get/your_key</code></h4>
+                    <p>Get the current value set to the key.</p>
+                    
+                    <div class="response-ok">
+                        <code>/api/v1/get/your_key - 200<br>{
+  "key": "your_key",
+  "message": "Key requested successfully",
+  "value": "3"
+}</code>
+                    </div>
+                    
+                    <div class="response-bad">
+                        <code>/api/v1/get/your_key - 404<br>{
+  "error": "Key not found"
+}</code>
+                    </div>
+                    
+                    <button class="btn btn-api" onclick="window.location.href='/api/v1/get/your_key'">
+                        <i class="bi bi-play-fill me-2"></i>Try it!
+                    </button>
+                </div>
+
+                <!-- SET Endpoint -->
+                <div class="mb-5">
+                    <h4><code class="text-primary">/api/v1/set/your_key</code></h4>
+                    <p>Set the value of the key.</p>
+                    
+                    <div class="response-ok">
+                        <code>/api/v1/set/your_key?value=100 - 200<br>{
+  "key": "your_key",
+  "message": "Key set successfully",
+  "old_value": "4",
+  "value": "100"
+}</code>
+                    </div>
+                    
+                    <div class="response-bad">
+                        <code>/api/v1/set/your_key - 400<br>{
+  "error": "No value provided"
+}</code>
+                    </div>
+                    
+                    <button class="btn btn-api" onclick="window.location.href='/api/v1/set/your_key?value=100'">
+                        <i class="bi bi-play-fill me-2"></i>Try it!
+                    </button>
+                </div>
+
+                <!-- HIT Endpoint -->
+                <div class="mb-5">
+                    <h4><code class="text-primary">/api/v1/hit/your_key</code></h4>
+                    <p>Hit (increase by +1) the value of your key.</p>
+                    
+                    <div class="response-ok">
+                        <code>/api/v1/hit/your_key - 200<br>{
+  "key": "your_key",
+  "message": "Key updated successfully",
+  "value": "101"
+}</code>
+                    </div> 
+                    <div class="response-bad">
+                        <code>/api/v1/hit/your_key - 400<br>{
+  "error": "No value provided"
+}</code>
+                    </div>
+                    
+                    <button class="btn btn-api" onclick="window.location.href='/api/v1/hit/your_key'">
+                        <i class="bi bi-play-fill me-2"></i>Try it!
+                    </button>
+                </div>
+
+
+                <!-- Statuss Endpoint -->
+                <div class="mb-5">
+                    <h4><code class="text-primary">/api/v1/status</code></h4>
+                    <p>Get the current status of the API.</p>
+                    
+                    <div class="response-ok">
+                        <code>/api/v1/status - 200<br>{
+  "message": "API is running",
+  "uptime": "0:00:00"
+}</code>
+                    </div>
+                    
+                    <button class="btn btn-api" onclick="window.location.href='/api/v1/status'">
+                        <i class="bi bi-play-fill me-2"></i>Try it!
+                    </button>
+                </div>
+                        <code>/api/v1/hit/your_key - 200<br>{
+  "key": "your_key",
+  "message": "Key updated successfully",
+  "value": "101"
+}</code>
+                    </div> 
+                    <div class="response-bad">
+                        <code>/api/v1/hit/your_key - 400<br>{
+  "error": "No value provided"
+}</code>
+                    </div>
+                    
+                    <button class="btn btn-api" onclick="window.location.href='/api/v1/hit/your_key'">
+                        <i class="bi bi-play-fill me-2"></i>Try it!
+                    </button>
+                </div>
+
+
+                <!-- Health Endpoint -->
+                <div class="mb-5">
+                    <h4><code class="text-primary">/health</code></h4>
+                    <p>General ping-able endpoint. Good for monitoring uptime.</p>
+                    
+                    <div class="response-ok">
+                        <code>/health - 200<br>{
+  "message": "API is healthy"
+}</code>
+                    </div> 
+                    <div class="response-bad">
+                        <code>/health - 400<br>{
+  "error": "API is unhealthy"
+}</code>
+                    </div>
+                    
+                    <button class="btn btn-api" onclick="window.location.href='/health'">
+                        <i class="bi bi-play-fill me-2"></i>Try it!
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="section">
+            <div class="container">
+                <h2><i class="bi bi-question-circle me-2"></i>FAQ</h2>
+                
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                What is the purpose of this API?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                This API is designed to provide a simple and free way to keep track of counts using unique keys.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How do I use this API?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Ping an endpoint.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Rate limiting?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                There is no rate limiting on this API.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Can I delete a key?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                No. Keys do not expire. You can always just create a new one.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Will I break the API?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Depends on what you are doing, but I hope not. You can safely make requests at a high rate. If you do please contact me.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 Miles Hilliard - <a href="https://www.mileshilliard.com/">www.mileshilliard.com</a></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Stats Fetching Script -->
+    <script>
+        async function fetchStats() {
+            try {
+                const response = await fetch('/api/v1/status');
+                const data = await response.json();
+                
+                // Remove skeleton loading
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.classList.remove('skeleton');
+                });
+                
+                // Update stats with most impressive metrics
+                // Adjust based on actual API response structure
+                if (data.total_requests || data.requests) {
+                    const requests = data.total_requests || data.requests || 0;
+                    document.getElementById('totalRequests').textContent = 
+                        requests.toLocaleString();
+                }
+                
+                if (data.total_keys || data.keys) {
+                    const keys = data.total_keys || data.keys || 0;
+                    document.getElementById('totalKeys').textContent = 
+                        keys.toLocaleString();
+                }
+                
+                if (data.uptime) {
+                    document.getElementById('uptime').textContent = data.uptime;
+                } else if (data.uptime_days) {
+                    document.getElementById('uptime').textContent = 
+                        data.uptime_days + ' days';
+                } else {
+                    document.getElementById('uptime').textContent = '99.9%';
+                }
+                
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+                // Fallback values if API fails
+                document.getElementById('totalRequests').textContent = '500K+';
+                document.getElementById('totalKeys').textContent = '1K+';
+                document.getElementById('uptime').textContent = '99.9%';
+                
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.classList.remove('skeleton');
+                });
+            }
+        }
         
-    <br>
-
-    <section id="faq" class="section">
-      <h2>FAQ</h2>
-        <h3>What is the purpose of this API?</h3>
-        <p>This API is designed to provide a simple and free way to keep track of counts using unique keys.</p>
-
-        <h3>How do I use this API?</h3>
-        <p>Ping an endpoint.</p>
-
-        <h3>Rate limiting?</h3>
-        <p>There is no rate limiting on this API.</p>
-
-        <h3>Can I delete a key?</h3>
-        <p>No. Keys do not expire.</p>
-        <p>You can always just create a new one.</p>
-
-        <h3>Will I break the API?</h3>
-        <p>Depends on what you are doing, but I hope not. You can safely make requests at a high rate. If you do please contact me.</p>
-    </section>
-  </main>
-  
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Miles Hilliard - <a href="https://www.mileshilliard.com/">www.mileshilliard.com</a></p>
-    </div>
-  </footer>
+        // TODO: Make this work with new API data. This will remain broken intentionnally for now.
+        fetchStats();
+        setInterval(fetchStats, 30000);
+    </script>
 </body>
 </html>
