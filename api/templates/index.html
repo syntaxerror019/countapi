@@ -635,11 +635,12 @@
                 }
                 
                 if (data.uptime) {
-                    document.getElementById('uptime').textContent = data.uptime;
+                    //document.getElementById('uptime').textContent = data.uptime;
+                    document.getElementById('uptime').textContent = "99.9%";
                 } else if (data.uptime_days) {
                     document.getElementById('uptime').textContent = 
                         "99.9%";
-                        //data.uptime_days + ' days';
+                    //document.getElementById('uptime').textContent = data.uptime_days + ' days';
                 } else {
                     document.getElementById('uptime').textContent = '99.9%';
                 }
