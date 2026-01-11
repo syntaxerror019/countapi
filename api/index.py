@@ -255,19 +255,18 @@ def hit_handler(key):
     }), 200
 
 @app.route('/api/v1/status', methods=['GET'])
-@limiter.limit("10 per second")
+@limiter.limit("30 per minute")
 @handle_redis_errors
 def status_handler():
-    """Get API status and statistics"""
     info = r.client.info()
-    
-    # Calculate uptime
-    uptime = datetime.utcnow() - APP_START_TIME
-    uptime_seconds = int(uptime.total_seconds())
+
+    uptime_seconds = info.get("uptime_in_seconds", 0)
+
+    # Convert to days/hours/minutes
     uptime_days = uptime_seconds // 86400
     uptime_hours = (uptime_seconds % 86400) // 3600
+    uptime_minutes = (uptime_seconds % 3600) // 60
     
-    # Get total keys
     total_keys = r.get_total_keys()
     
     # Get page hits
