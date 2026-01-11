@@ -54,6 +54,85 @@ Response:
 
 ---
 
+## Javascript
+```js
+<script>
+const BASE = "https://countapi.mileshilliard.com/api/v1";
+const KEY = "my_counter";
+
+// Increment
+fetch(`${BASE}/hit/${KEY}`)
+  .then(res => res.json())
+  .then(data => console.log("Hit:", data));
+
+// Get current value
+fetch(`${BASE}/get/${KEY}`)
+  .then(res => res.json())
+  .then(data => console.log("Get:", data));
+
+// Set counter
+fetch(`${BASE}/set/${KEY}?value=100`)
+  .then(res => res.json())
+  .then(data => console.log("Set:", data));
+</script>
+```
+
+## Command Line
+```bash
+# Increment a counter
+curl https://countapi.mileshilliard.com/api/v1/hit/my_counter
+
+# Get current value
+curl https://countapi.mileshilliard.com/api/v1/get/my_counter
+
+# Set a counter to a specific value
+curl "https://countapi.mileshilliard.com/api/v1/set/my_counter?value=100"
+```
+
+## Python
+```py
+import requests
+
+BASE = "https://countapi.mileshilliard.com/api/v1"
+KEY = "my_counter"
+
+# Increment counter
+res = requests.get(f"{BASE}/hit/{KEY}")
+print(res.json())
+
+# Get current value
+res = requests.get(f"{BASE}/get/{KEY}")
+print(res.json())
+
+# Set counter
+res = requests.get(f"{BASE}/set/{KEY}?value=100")
+print(res.json())
+```
+
+## Node.JS
+```js
+const fetch = require('node-fetch');
+const BASE = "https://countapi.mileshilliard.com/api/v1";
+const KEY = "my_counter";
+
+// Increment counter
+fetch(`${BASE}/hit/${KEY}`)
+  .then(res => res.json())
+  .then(console.log);
+
+// Get current value
+fetch(`${BASE}/get/${KEY}`)
+  .then(res => res.json())
+  .then(console.log);
+
+// Set counter
+fetch(`${BASE}/set/${KEY}?value=100`)
+  .then(res => res.json())
+  .then(console.log);
+```
+
+---
+
 ## Notes & Best Practices
 
 - Use unique keys.... all counters are public.
