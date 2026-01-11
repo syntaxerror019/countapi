@@ -1,7 +1,64 @@
 # CountAPI
 
-<p>CountAPI is a spin-off of the beloved <a href="https://countapi.xyz/">OG countapi.</a> Unfortunately, the service is no longer available to the public as a free API due to widely unknown reasons. This service has been created as a very simple version of CountAPI in hopes of getting some users back on their feet again.</p>
-        <p>Although this API is a slightly more limited version than the original, it serves a very similar purpose, and I hope it will fulfill the needs of most users looking for something similar. If not, please feel free to email me directly at <a href="mailto:miles@mileshilliard.com">miles@mileshilliard.com</a> and I would be happy to talk! Until the massive traffic explosion I am totally expecting, be satisfied with what you've got. It is free after all!</p>
-        <b>Disclaimer: This service is in no way affiliated with countapi.xyz</b>
+A free, no-auth, no-rate-limit counting API for developers.
 
-More information and endpoints can be found at <a href="https://countapi.mileshilliard.com">https://countapi.mileshilliard.com<a>
+CountAPI is a lightweight spin-off inspired by the original countapi.xyz. It provides a simple way to track counters using unique keys — perfect for blogs, apps, scripts, or personal projects.
+
+Key Features:
+
+- No signup or API keys required
+- Instant and unlimited usage
+- Track counters globally
+- Simple GET endpoints
+
+Disclaimer: This service is not affiliated with countapi.xyz.
+
+---
+
+## How to Use
+
+### Increment a counter
+GET https://countapi.mileshilliard.com/api/v1/hit/your_key
+
+Response:
+{
+  "key": "your_key",
+  "message": "Key updated successfully",
+  "value": 3
+}
+
+### Get current value
+GET https://countapi.mileshilliard.com/api/v1/get/your_key
+
+Response:
+{
+  "key": "your_key",
+  "value": 3
+}
+
+### Set a counter
+GET https://countapi.mileshilliard.com/api/v1/set/your_key?value=100
+
+Response:
+{
+  "key": "your_key",
+  "old_value": 3,
+  "value": 100
+}
+
+---
+
+## Notes & Best Practices
+
+- Use unique keys — all counters are public.
+- Keys do not expire. If you need a “reset,” just create a new key.
+- There is no guaranteed SLA, but the service is generally online 24/7.
+
+---
+
+## Learn More
+
+For full documentation, endpoints, and live stats, visit:
+https://countapi.mileshilliard.com
+
+Or reach out directly via email: miles@mileshilliard.com
