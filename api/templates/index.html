@@ -489,23 +489,6 @@
                         <i class="bi bi-play-fill me-2"></i>Try it!
                     </button>
                 </div>
-                        <code>/api/v1/hit/your_key - 200<br>{
-  "key": "your_key",
-  "message": "Key updated successfully",
-  "value": "101"
-}</code>
-                    </div> 
-                    <div class="response-bad">
-                        <code>/api/v1/hit/your_key - 400<br>{
-  "error": "No value provided"
-}</code>
-                    </div>
-                    
-                    <button class="btn btn-api" onclick="window.location.href='/api/v1/hit/your_key'">
-                        <i class="bi bi-play-fill me-2"></i>Try it!
-                    </button>
-                </div>
-
 
                 <!-- Health Endpoint -->
                 <div class="mb-5">
@@ -518,9 +501,7 @@
 }</code>
                     </div> 
                     <div class="response-bad">
-                        <code>/health - 400<br>{
-  "error": "API is unhealthy"
-}</code>
+                        <code>/health - 500<br>N/A</code>
                     </div>
                     
                     <button class="btn btn-api" onclick="window.location.href='/health'">
