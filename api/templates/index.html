@@ -588,7 +588,7 @@
                         </h2>
                         <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Depends on what you are doing, but I hope not. You can safely make requests at a high rate. If you do please contact me.
+                                Please shoot me an email before you try to.
                             </div>
                         </div>
                     </div>
@@ -637,7 +637,8 @@
                     document.getElementById('uptime').textContent = data.uptime;
                 } else if (data.uptime_days) {
                     document.getElementById('uptime').textContent = 
-                        data.uptime_days + ' days';
+                        "99.9%";
+                        //data.uptime_days + ' days';
                 } else {
                     document.getElementById('uptime').textContent = '99.9%';
                 }
