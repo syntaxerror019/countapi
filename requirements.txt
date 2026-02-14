@@ -2,3 +2,4 @@ Flask==3.0.3
 redis
 flask-cors
 flask-limiter
+python-dotenv
