@@ -24,12 +24,13 @@ logger = logging.getLogger(__name__)
 
 # ------------------ Rate Limiting ------------------
 limiter = Limiter(
-    app,
     key_func=get_remote_address,
     default_limits=["100 per minute"],
     storage_uri=os.getenv("COUNTAPI_REDIS_URL") or "memory://",
-    enabled=os.getenv("ENABLE_RATE_LIMIT", "false").lower() == "true"
+    enabled=os.getenv("ENABLE_RATE_LIMIT", "false").lower() == "true",
+    app=app  # must be last
 )
+
 
 # ------------------ Redis Wrapper ------------------
 class Server:
