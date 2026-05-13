@@ -1,6 +1,3 @@
-![Static Badge](https://img.shields.io/badge/Disclaimer-This%20project%20is%20free%20for%20everyone.%20Please%20stop%20DDOS'ing%20me-red)
-
-
 # CountAPI
 
 A free, no-auth, no-rate-limit counting API for developers.
