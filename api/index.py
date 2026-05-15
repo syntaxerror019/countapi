@@ -66,6 +66,11 @@ except Exception as e:
 APP_START_TIME = datetime.utcnow()
 
 # ------------------ Helpers ------------------
+WRITE_PROTECTED_KEYS = {'count.api.page.hits'}
+
+def is_write_protected(key):
+    return key in WRITE_PROTECTED_KEYS
+
 def validate_key(key):
     if not key or len(key) > 200: return False
     forbidden = ['/', '\\', '\0', ' ', '\n', '\r', '\t']
@@ -117,6 +122,7 @@ def get_handler(key):
 @handle_redis_errors
 def set_handler(key):
     if not validate_key(key): return jsonify({"error": "Invalid key"}), 400
+    if is_write_protected(key): return jsonify({"error": "This key is write-protected"}), 403
     value = request.get_json(silent=True, force=True) or {}
     value = value.get('value') if request.method == 'POST' else request.args.get('value')
     if value is None: return jsonify({"error": "No value provided"}), 400
@@ -133,6 +139,7 @@ def set_handler(key):
 @handle_redis_errors
 def hit_handler(key):
     if not validate_key(key): return jsonify({"error": "Invalid key"}), 400
+    if is_write_protected(key): return jsonify({"error": "This key is write-protected"}), 403
     try:
         amount = int(request.args.get('amount', 1))
         if not (1 <= amount <= 100): raise ValueError
