@@ -679,7 +679,7 @@
                         <p class="mt-4">Each "counter" is simply defined by a unique <strong>key</strong>. No
                             registration, no API keys, no headers required.</p>
                         <p>Since namespaces don't exist, use a very unique key (e.g.,
-                            <code>mysite_homepage_visits_2026</code>) to avoid overwriting someone else's counter.
+                            <code>my_super_unique_counter</code>) to avoid overwriting someone else's counter.
                         </p>
                         <p><strong>Warning:</strong> All keys and their values are public. Never store any confidential
                             contents.</p>
@@ -696,6 +696,9 @@
                         <pre><code>fetch('https://countapi.mileshilliard.com/api/v1/hit/mysite_visits')
   .then(response => response.json())
   .then(data => console.log('This page has ' + data.value + ' visits!'));</code></pre>
+
+                        <p class="mt-4 mb-2 text-white fw-semibold">Tracking Pixel Example (No JS required):</p>
+                        <pre><code>&lt;img src="https://countapi.mileshilliard.com/api/v1/hit/mysite_visits" style="display:none;" alt="" /&gt;</code></pre>
                     </div>
                 </div>
             </div>
@@ -976,16 +979,18 @@
                     card.classList.remove('skeleton');
                 });
 
+                const formatCompact = (num) => {
+                    return Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(num) + '+';
+                };
+
                 if (data.total_requests || data.requests) {
                     const requests = data.total_requests || data.requests || 0;
-                    document.getElementById('totalRequests').textContent =
-                        requests.toLocaleString();
+                    document.getElementById('totalRequests').textContent = formatCompact(requests);
                 }
 
                 if (data.total_keys || data.keys) {
                     const keys = data.total_keys || data.keys || 0;
-                    document.getElementById('totalKeys').textContent =
-                        keys.toLocaleString();
+                    document.getElementById('totalKeys').textContent = formatCompact(keys);
                 }
 
                 if (data.uptime) {
