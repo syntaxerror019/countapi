@@ -588,6 +588,9 @@
                         <a class="nav-link" href="#endpoints">Endpoints</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/playground">API Playground</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="https://stats.uptimerobot.com/qTeFyzz83B/803060687"
                             target="_blank">Uptime</a>
                     </li>
@@ -647,9 +650,14 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <h2><i class="bi bi-info-circle-fill me-3"></i>Introduction</h2>
-                        <p class="lead mt-4 text-white">CountAPI is a lightweight, open-source API for tracking hits and custom counts. It serves as a modern, reliable alternative to the classic countapi.xyz.</p>
-                        <p>Our goal is to provide a seamless, free-to-use counting service for everyone—no API keys or registrations required. Whether you're tracking website visits, button clicks, or application events, CountAPI makes it effortless.</p>
-                        <p>This project is open source. Feel free to <a href="https://github.com/syntaxerror019/countapi/" target="_blank">check it out on GitHub.</a></p>
+                        <p class="lead mt-4 text-white">CountAPI is a lightweight, open-source API for tracking hits and
+                            custom counts. It serves as a modern, reliable alternative to the classic countapi.xyz.</p>
+                        <p>Our goal is to provide a seamless, free-to-use counting service for everyone—no API keys or
+                            registrations required. Whether you're tracking website visits, button clicks, or
+                            application events, CountAPI makes it effortless.</p>
+                        <p>This project is open source. Feel free to <a
+                                href="https://github.com/syntaxerror019/countapi/" target="_blank">check it out on
+                                GitHub.</a></p>
                         <div class="alert alert-info mt-4" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-3 fs-5"></i>
                             <div><strong>Disclaimer:</strong> This service is in no way affiliated with CountAPI.</div>
@@ -780,17 +788,24 @@
                         <!-- Shield Endpoints -->
                         <div class="mb-5 border-top border-secondary pt-5">
                             <h4><code class="fs-4">/api/v1/{get,hit}/your_key/shield</code></h4>
-                            <p>Generate a custom SVG shield showing your count! Use <code>/get/</code> if you just want to display the number, or <code>/hit/</code> if you want it to increase by +1 every time it's loaded.</p>
-                            
+                            <p>Generate a custom SVG shield showing your count! Use <code>/get/</code> if you just want
+                                to display the number, or <code>/hit/</code> if you want it to increase by +1 every time
+                                it's loaded.</p>
+
                             <p class="mt-4 text-white fw-semibold">Customization Options (Query Parameters):</p>
                             <ul class="text-muted">
                                 <li><code>text</code>: The label on the left side of the shield (e.g., "visits").</li>
-                                <li><code>bgcolor</code>: The background color of the right side, as a hex code (e.g., "ff0000").</li>
+                                <li><code>bgcolor</code>: The background color of the right side, as a hex code (e.g.,
+                                    "ff0000").</li>
                                 <li><code>textcolor</code>: The color of the text, as a hex code (e.g., "ffffff").</li>
-                                <li><code>style</code>: The aesthetic style. Options are <code>flat</code> or <code>plastic</code>.</li>
+                                <li><code>style</code>: The aesthetic style. Options are <code>flat</code> or
+                                    <code>plastic</code>.
+                                </li>
                             </ul>
-                            
-                            <p class="mt-3 mb-0"><i class="bi bi-arrow-down-circle-fill text-primary me-2"></i><strong>Scroll down to the Playground</strong> to easily create and copy your customized shield!</p>
+
+                            <p class="mt-3 mb-0"><i
+                                    class="bi bi-arrow-down-circle-fill text-primary me-2"></i><strong>Scroll down to
+                                    the Playground</strong> to easily create and copy your customized shield!</p>
                         </div>
 
                         <!-- Status Endpoint -->
@@ -840,29 +855,38 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <h2><i class="bi bi-controller me-3"></i>Playground</h2>
-                        <p class="mt-3 mb-5">Try out the shield generator live. Customize your badge and copy the exact code you need.</p>
-                        
+                        <p class="mt-3 mb-5">Try out the shield generator live. Customize your badge and copy the exact
+                            code you need.</p>
+
                         <div class="row">
                             <div class="col-md-5 mb-4">
                                 <div class="stat-card p-4 h-100" style="background: rgba(30,41,59,0.8);">
                                     <h5 class="text-white mb-4">Settings</h5>
-                                    
+
                                     <div class="mb-3">
                                         <label class="form-label text-white small fw-medium">Key Name</label>
-                                        <input type="text" id="pgKey" class="form-control bg-dark text-white border-secondary" value="demo_visits">
+                                        <input type="text" id="pgKey"
+                                            class="form-control bg-dark text-white border-secondary"
+                                            value="demo_visits">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label text-white small fw-medium">Left Text (Label)</label>
-                                        <input type="text" id="pgText" class="form-control bg-dark text-white border-secondary" value="visits">
+                                        <input type="text" id="pgText"
+                                            class="form-control bg-dark text-white border-secondary" value="visits">
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-6">
-                                            <label class="form-label text-white small fw-medium">Background Color</label>
-                                            <input type="color" id="pgBgColor" class="form-control form-control-color bg-dark border-secondary w-100" value="#a855f7">
+                                            <label class="form-label text-white small fw-medium">Background
+                                                Color</label>
+                                            <input type="color" id="pgBgColor"
+                                                class="form-control form-control-color bg-dark border-secondary w-100"
+                                                value="#a855f7">
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label text-white small fw-medium">Text Color</label>
-                                            <input type="color" id="pgTextColor" class="form-control form-control-color bg-dark border-secondary w-100" value="#ffffff">
+                                            <input type="color" id="pgTextColor"
+                                                class="form-control form-control-color bg-dark border-secondary w-100"
+                                                value="#ffffff">
                                         </div>
                                     </div>
                                     <div class="mb-4">
@@ -874,23 +898,26 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-7 mb-4">
-                                <div class="stat-card p-4 h-100 d-flex flex-column" style="background: rgba(30,41,59,0.8);">
+                                <div class="stat-card p-4 h-100 d-flex flex-column"
+                                    style="background: rgba(30,41,59,0.8);">
                                     <h5 class="text-white mb-4">Live Preview</h5>
-                                    
-                                    <div class="d-flex align-items-center mb-4 p-4 rounded" style="background: rgba(15,23,42,0.5); min-height: 100px;">
-                                        <img id="pgPreviewImg" src="" alt="Live Preview Shield" class="me-auto shadow-sm">
+
+                                    <div class="d-flex align-items-center mb-4 p-4 rounded"
+                                        style="background: rgba(15,23,42,0.5); min-height: 100px;">
+                                        <img id="pgPreviewImg" src="" alt="Live Preview Shield"
+                                            class="me-auto shadow-sm">
                                         <button id="pgHitBtn" class="btn btn-sm btn-api ms-3">
                                             <i class="bi bi-plus-circle me-1"></i> Hit (+1)
                                         </button>
                                     </div>
-                                    
+
                                     <h6 class="text-white mb-2 small">Markdown Embed (Read-only)</h6>
                                     <div class="position-relative mb-3">
                                         <pre class="m-0 p-3 small text-break"><code id="pgMarkdownCode"></code></pre>
                                     </div>
-                                    
+
                                     <h6 class="text-white mb-2 small">HTML Embed (Incrementing)</h6>
                                     <div class="position-relative">
                                         <pre class="m-0 p-3 small text-break"><code id="pgHtmlCode"></code></pre>
@@ -910,21 +937,25 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <h2><i class="bi bi-diagram-3-fill me-3"></i>Overview</h2>
-                        <p class="mt-4 text-white">This API is hosted similarly to the OG countapi, optimized for extreme speed and minimal overhead.</p>
-                        
+                        <p class="mt-4 text-white">This API is hosted similarly to the OG countapi, optimized for
+                            extreme speed and minimal overhead.</p>
+
                         <div class="tree mt-4">
                             <ul>
                                 <li>
                                     <span><i class="bi bi-server me-2"></i>Ubuntu VPS</span>
                                     <ul>
                                         <li>
-                                            <span><i class="bi bi-braces me-2"></i>Python Flask App</span>
+                                            <span><i class="bi bi-braces me-2"></i>Python Uvicorn App</span>
                                             <ul>
-                                                <li><span><i class="bi bi-shield-lock-fill me-2"></i>Flask-Limiter (Rate Limiting)</span></li>
+                                                <li><span><i class="bi bi-shield-lock-fill me-2"></i>Limiter (Rate
+                                                        Limiting)</span></li>
                                                 <li>
-                                                    <span><i class="bi bi-hdd-rack me-2"></i>Core Endpoints (get, set, hit, shield)</span>
+                                                    <span><i class="bi bi-hdd-rack me-2"></i>Core Endpoints (get, set,
+                                                        hit, shield)</span>
                                                     <ul>
-                                                        <li><span><i class="bi bi-database-fill me-2"></i>Redis Server (In-Memory K/V Store)</span></li>
+                                                        <li><span><i class="bi bi-database-fill me-2"></i>Redis Server
+                                                                (In-Memory K/V Store)</span></li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -1095,7 +1126,7 @@
         // Playground Logic
         document.addEventListener('DOMContentLoaded', () => {
             const baseUrl = window.location.origin;
-            
+
             const inputs = {
                 key: document.getElementById('pgKey'),
                 text: document.getElementById('pgText'),
@@ -1103,44 +1134,44 @@
                 textColor: document.getElementById('pgTextColor'),
                 style: document.getElementById('pgStyle')
             };
-            
+
             const outputs = {
                 img: document.getElementById('pgPreviewImg'),
                 markdown: document.getElementById('pgMarkdownCode'),
                 html: document.getElementById('pgHtmlCode'),
                 btn: document.getElementById('pgHitBtn')
             };
-            
+
             function updatePlayground(forceHit = false) {
                 const key = inputs.key.value || 'demo_visits';
                 const text = encodeURIComponent(inputs.text.value || 'visits');
                 const bgColor = inputs.bgColor.value.substring(1);
                 const textColor = inputs.textColor.value.substring(1);
                 const style = inputs.style.value;
-                
+
                 const action = forceHit ? 'hit' : 'get';
                 const endpoint = `/api/v1/${action}/${key}/shield?text=${text}&bgcolor=${bgColor}&textcolor=${textColor}&style=${style}`;
                 const fullUrl = `${baseUrl}${endpoint}`;
-                
+
                 // Add timestamp to bust cache when hitting
                 outputs.img.src = fullUrl + (forceHit ? `&t=${Date.now()}` : '');
-                
+
                 const displayUrlGet = `${baseUrl}/api/v1/get/${key}/shield?text=${text}&bgcolor=${bgColor}&textcolor=${textColor}&style=${style}`;
                 const displayUrlHit = `${baseUrl}/api/v1/hit/${key}/shield?text=${text}&bgcolor=${bgColor}&textcolor=${textColor}&style=${style}`;
-                
+
                 outputs.markdown.textContent = `![${inputs.text.value || 'visits'}](${displayUrlGet})`;
                 outputs.html.textContent = `<img src="${displayUrlHit}" alt="${inputs.text.value || 'visits'}" />`;
             }
-            
+
             // Attach event listeners
             Object.values(inputs).forEach(input => {
                 input.addEventListener('input', () => updatePlayground(false));
             });
-            
+
             outputs.btn.addEventListener('click', () => {
                 updatePlayground(true);
             });
-            
+
             // Initial render
             updatePlayground(false);
         });
