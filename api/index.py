@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, make_response
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -9,10 +9,8 @@ from datetime import datetime
 from functools import wraps
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# ------------------ Basic App Setup ------------------
 app = Flask(__name__)
 CORS(app)
 
@@ -36,7 +34,6 @@ limiter = Limiter(
 class Server:
     def __init__(self, url=None):
         try:
-            # Use redis.from_url — handles password, port, host automatically
             redis_url = url or "redis://127.0.0.1:6379/0"
             self.client = redis.from_url(redis_url, decode_responses=True)
             self.client.ping()
@@ -90,6 +87,48 @@ def handle_redis_errors(f):
             return jsonify({"error": "Internal server error"}), 500
     return wrapper
 
+def generate_shield(label, value, color, textcolor, style):
+    label = str(label)
+    value = str(value)
+    label_width = len(label) * 7 + 14
+    value_width = len(value) * 7 + 14
+    total_width = label_width + value_width
+    
+    color = color.lstrip('#')
+    textcolor = textcolor.lstrip('#')
+    
+    if style == 'plastic':
+        gradient = f"""<linearGradient id="b" x2="0" y2="100%">
+    <stop offset="0" stop-color="#fff" stop-opacity=".7"/>
+    <stop offset="0.1" stop-color="#aaa" stop-opacity=".1"/>
+    <stop offset="0.9" stop-color="#000" stop-opacity=".3"/>
+    <stop offset="1" stop-color="#000" stop-opacity=".5"/>
+  </linearGradient>"""
+    else:
+        gradient = f"""<linearGradient id="b" x2="0" y2="100%">
+    <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>"""
+
+    svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{total_width}" height="20">
+  {gradient}
+  <mask id="a">
+    <rect width="{total_width}" height="20" rx="3" fill="#fff"/>
+  </mask>
+  <g mask="url(#a)">
+    <rect width="{label_width}" height="20" fill="#555"/>
+    <rect x="{label_width}" width="{value_width}" height="20" fill="#{color}"/>
+    <rect width="{total_width}" height="20" fill="url(#b)"/>
+  </g>
+  <g fill="#{textcolor}" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+    <text x="{label_width/2}" y="15" fill="#010101" fill-opacity=".3">{label}</text>
+    <text x="{label_width/2}" y="14">{label}</text>
+    <text x="{label_width + value_width/2}" y="15" fill="#010101" fill-opacity=".3">{value}</text>
+    <text x="{label_width + value_width/2}" y="14">{value}</text>
+  </g>
+</svg>"""
+    return svg
+
 # ------------------ Page Hit Tracker ------------------
 @app.before_request
 def track_hits():
@@ -117,21 +156,53 @@ def get_handler(key):
     if value is None: return jsonify({"error": "Key not found"}), 404
     return jsonify({"key": key, "value": int(value) if value.isdigit() else value}), 200
 
+@app.route('/api/v1/get/<key>/shield', methods=['GET'])
+@limiter.limit("10 per second")
+@handle_redis_errors
+def get_shield_handler(key):
+    if not validate_key(key): return jsonify({"error": "Invalid key"}), 400
+    value = r.get(key)
+    if value is None: value = 0
+    
+    label = request.args.get('text', request.args.get('label', 'visits'))
+    color = request.args.get('bgcolor', request.args.get('color', '007ec6'))
+    textcolor = request.args.get('textcolor', 'fff')
+    style = request.args.get('style', 'flat')
+    
+    svg = generate_shield(label, value, color, textcolor, style)
+    response = make_response(svg)
+    response.headers['Content-Type'] = 'image/svg+xml'
+    response.headers['Cache-Control'] = 'max-age=0, no-cache, no-store, must-revalidate'
+    return response, 200
+
 @app.route('/api/v1/set/<key>', methods=['GET', 'POST'])
 @limiter.limit("10 per second")
 @handle_redis_errors
 def set_handler(key):
-    if not validate_key(key): return jsonify({"error": "Invalid key"}), 400
-    if is_write_protected(key): return jsonify({"error": "This key is write-protected"}), 403
+    if not validate_key(key):
+        return jsonify({"error": "Invalid key"}), 400
+        
+    if is_write_protected(key):
+        return jsonify({"error": "This key is write-protected"}), 403
+        
     value = request.get_json(silent=True, force=True) or {}
     value = value.get('value') if request.method == 'POST' else request.args.get('value')
-    if value is None: return jsonify({"error": "No value provided"}), 400
-    try: int_value = int(value)
-    except ValueError: return jsonify({"error": "Value must be integer"}), 400
+    
+    if value is None:
+        return jsonify({"error": "No value provided"}), 400
+        
+    try:
+        int_value = int(value)
+    except ValueError:
+        return jsonify({"error": "Value must be integer"}), 400
+        
     old_value = r.get(key)
     r.set(key, int_value)
+    
     resp = {"key": key, "value": int_value}
-    if old_value: resp["old_value"] = int(old_value) if old_value.isdigit() else old_value
+    if old_value:
+        resp["old_value"] = int(old_value) if old_value.isdigit() else old_value
+        
     return jsonify(resp), 200
 
 @app.route('/api/v1/hit/<key>', methods=['GET', 'POST'])
@@ -146,6 +217,30 @@ def hit_handler(key):
     except ValueError: return jsonify({"error": "Amount must be 1-100"}), 400
     new_value = r.increase(key, amount)
     return jsonify({"key": key, "value": int(new_value)}), 200
+
+@app.route('/api/v1/hit/<key>/shield', methods=['GET', 'POST'])
+@limiter.limit("10 per second")
+@handle_redis_errors
+def hit_shield_handler(key):
+    if not validate_key(key): return jsonify({"error": "Invalid key"}), 400
+    if is_write_protected(key): return jsonify({"error": "This key is write-protected"}), 403
+    try:
+        amount = int(request.args.get('amount', 1))
+        if not (1 <= amount <= 100): raise ValueError
+    except ValueError: return jsonify({"error": "Amount must be 1-100"}), 400
+    
+    new_value = r.increase(key, amount)
+    
+    label = request.args.get('text', request.args.get('label', 'visits'))
+    color = request.args.get('bgcolor', request.args.get('color', '007ec6'))
+    textcolor = request.args.get('textcolor', 'fff')
+    style = request.args.get('style', 'flat')
+    
+    svg = generate_shield(label, new_value, color, textcolor, style)
+    response = make_response(svg)
+    response.headers['Content-Type'] = 'image/svg+xml'
+    response.headers['Cache-Control'] = 'max-age=0, no-cache, no-store, must-revalidate'
+    return response, 200
 
 @app.route('/api/v1/status', methods=['GET'])
 @limiter.limit("30 per minute")
