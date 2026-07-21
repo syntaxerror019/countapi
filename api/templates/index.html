@@ -204,14 +204,19 @@
 
         /* Hero Section */
         .hero {
-            padding: 12rem 0 6rem;
+            height: 100vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
             z-index: 1;
             text-align: center;
+            padding: 5.5rem 0 2rem;
         }
 
         .hero h1 {
-            font-size: 4.5rem;
+            font-size: calc(2rem + 2.5vw);
             font-weight: 800;
             margin-bottom: 1.5rem;
             line-height: 1.1;
@@ -220,11 +225,11 @@
 
         .hero h3 {
             font-family: var(--font-body);
-            font-size: 1.25rem;
+            font-size: calc(1rem + 0.3vw);
             font-weight: 400;
             color: var(--text-muted);
             margin-bottom: 3rem;
-            max-width: 600px;
+            max-width: 650px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -251,25 +256,22 @@
             box-shadow: 0 10px 25px rgba(168, 85, 247, 0.6);
         }
 
-        /* Stats Grid */
-        .stats-grid {
-            margin-top: 5rem;
-        }
-
+        /* Stats Grid & Cards */
         .stat-card {
             background: var(--bg-surface);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1.75rem 1.5rem;
             margin-bottom: 1.5rem;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         .stat-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             background: var(--bg-surface-hover);
             border-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
@@ -277,7 +279,7 @@
 
         .stat-value {
             font-family: var(--font-heading);
-            font-size: 3rem;
+            font-size: 2.75rem;
             font-weight: 800;
             margin: 0;
             color: white;
@@ -293,6 +295,7 @@
             letter-spacing: 1.5px;
             font-weight: 600;
             margin-top: 0.5rem;
+            margin-bottom: 0;
         }
 
         .skeleton {
@@ -560,6 +563,66 @@
                 padding: 4rem 0;
             }
         }
+
+
+
+        /* Hero Logo Scroller */
+        .hero-used-by {
+            margin-top: 3rem;
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, white 12%, white 88%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, white 12%, white 88%, transparent);
+        }
+
+        .hero-used-by-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .marquee-track-wrap {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 28s linear infinite;
+        }
+
+        .marquee-track-wrap:hover {
+            animation-play-state: paused;
+        }
+
+        .logo-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0 2rem;
+            color: rgba(148, 163, 184, 0.45);
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        .logo-chip:hover {
+            color: rgba(148, 163, 184, 0.85);
+        }
+
+        .logo-chip i {
+            font-size: 1rem;
+        }
+
+        @keyframes marquee-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
     </style>
 </head>
 
@@ -619,24 +682,35 @@
                         </a>
                     </div>
 
-                    <div class="row stats-grid justify-content-center" id="statsContainer">
-                        <div class="col-md-3 col-sm-6">
-                            <div class="stat-card skeleton">
-                                <p class="stat-value" id="totalRequests">---</p>
-                                <p class="stat-label">Total Requests</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="stat-card skeleton">
-                                <p class="stat-value" id="totalKeys">---</p>
-                                <p class="stat-label">Active Keys</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="stat-card skeleton">
-                                <p class="stat-value" id="uptime">---</p>
-                                <p class="stat-label">SLA Uptime</p>
-                            </div>
+                    <!-- Inline integrations scroller -->
+                    <div class="hero-used-by">
+                        <div class="hero-used-by-label">Works seamlessly with</div>
+                        <div class="marquee-track-wrap">
+                            <!-- set 1 -->
+                            <span class="logo-chip"><i class="bi bi-filetype-js"></i> JavaScript</span>
+                            <span class="logo-chip"><i class="bi bi-filetype-py"></i> Python</span>
+                            <span class="logo-chip"><i class="bi bi-filetype-php"></i> PHP</span>
+                            <span class="logo-chip"><i class="bi bi-terminal"></i> cURL / CLI</span>
+                            <span class="logo-chip"><i class="bi bi-wordpress"></i> WordPress</span>
+                            <span class="logo-chip"><i class="bi bi-github"></i> GitHub READMEs</span>
+                            <span class="logo-chip"><i class="bi bi-markdown"></i> Markdown</span>
+                            <span class="logo-chip"><i class="bi bi-globe"></i> Any Website</span>
+                            <span class="logo-chip"><i class="bi bi-code-slash"></i> Any Framework</span>
+                            <span class="logo-chip"><i class="bi bi-braces"></i> REST / Fetch</span>
+                            <!-- set 2 (duplicate for seamless loop) -->
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-filetype-js"></i>
+                                JavaScript</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-filetype-py"></i> Python</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-filetype-php"></i> PHP</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-terminal"></i> cURL / CLI</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-wordpress"></i> WordPress</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-github"></i> GitHub
+                                READMEs</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-markdown"></i> Markdown</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-globe"></i> Any Website</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-code-slash"></i> Any
+                                Framework</span>
+                            <span class="logo-chip" aria-hidden="true"><i class="bi bi-braces"></i> REST / Fetch</span>
                         </div>
                     </div>
                 </div>
@@ -661,6 +735,28 @@
                         <div class="alert alert-info mt-4" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-3 fs-5"></i>
                             <div><strong>Disclaimer:</strong> This service is in no way affiliated with CountAPI.</div>
+                        </div>
+
+                        <!-- Live Stats -->
+                        <div class="row justify-content-center mt-5" id="statsContainer">
+                            <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
+                                <div class="stat-card skeleton">
+                                    <p class="stat-value" id="totalRequests">---</p>
+                                    <p class="stat-label">Total Requests</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
+                                <div class="stat-card skeleton">
+                                    <p class="stat-value" id="totalKeys">---</p>
+                                    <p class="stat-label">Active Keys</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
+                                <div class="stat-card skeleton">
+                                    <p class="stat-value" id="uptime">---</p>
+                                    <p class="stat-label">SLA Uptime</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -846,7 +942,6 @@
                     </div>
                 </div>
             </div>
-        </section>
         </section>
 
         <!-- Playground -->
@@ -1110,8 +1205,8 @@
             } catch (error) {
                 console.error('Error fetching stats:', error);
                 // Fallback values if API fails
-                document.getElementById('totalRequests').textContent = '3M+';
-                document.getElementById('totalKeys').textContent = '100K+';
+                document.getElementById('totalRequests').textContent = '15M+';
+                document.getElementById('totalKeys').textContent = '120K+';
                 document.getElementById('uptime').textContent = '99.9%';
 
                 document.querySelectorAll('.stat-card').forEach(card => {
