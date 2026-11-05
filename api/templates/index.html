@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Count API – Unlimited Counter API, No Signup, No Keys</title>
+<meta name="description" content="A forever free, no-nonsense counting API. No signup, no API keys. Just a URL.">
+<style>
+:root{
+  --bg:#faf9f6; --surface:#f2f0ea; --ink:#1f1d1a; --muted:#6b675f; --line:#e3e0d8;
+  --accent:#2f6b4f; --accent-ink:#fff; --code:#efede6; --warn:#9a5b1c;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#1b1a18;--surface:#242321;--ink:#ece9e2;--muted:#9b968c;--line:#35332f;--accent:#7cc4a0;--accent-ink:#13241c;--code:#262522;--warn:#d9a266}
+}
+:root[data-theme="dark"]{--bg:#1b1a18;--surface:#242321;--ink:#ece9e2;--muted:#9b968c;--line:#35332f;--accent:#7cc4a0;--accent-ink:#13241c;--code:#262522;--warn:#d9a266}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:720px;margin:0 auto;padding:0 24px}
+code,pre,.mono{font-family:var(--mono)}
+code{background:var(--code);padding:.12em .4em;border-radius:5px;font-size:.88em}
+
+/* nav */
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid transparent}
+nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+.brand{font:600 1.15rem var(--serif);text-decoration:none;margin-right:auto}
+nav a:not(.brand){font-size:.92rem;color:var(--muted);text-decoration:none}
+nav a:not(.brand):hover{color:var(--ink)}
+@media(max-width:600px){nav .opt{display:none}}
+
+/* hero */
+nav .wrap,.wrap.wide{max-width:1040px}
+.hero{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center;padding:72px 0 44px}
+@media(max-width:860px){.hero{grid-template-columns:1fr;gap:36px;padding-top:48px}}
+h1{font:500 clamp(2.3rem,5.4vw,3.5rem)/1.06 var(--serif);letter-spacing:-.025em;margin:0 0 18px;text-wrap:balance}
+.lede{font-size:1.1rem;color:var(--muted);max-width:30em;margin:0 0 28px}
+.lede b{color:var(--ink);font-weight:600}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.cta .btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cta .btn.solid:hover{opacity:.88}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.pills .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:7px;vertical-align:1px}
+.pills .ok .dot{background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.pills b{font-weight:500;color:var(--ink)}
+.pills span{font-size:.82rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:3px 12px}
+
+.try{--panel:#211f1c;--pink:#ece9e2;--pmuted:#9b968c;--pline:#3a3834;background:var(--panel);color:var(--pink);border-radius:18px;padding:22px 22px 20px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 24px 48px -24px rgba(31,29,26,.45)}
+.try .bar{display:flex;gap:6px;margin-bottom:18px}
+.try .bar i{width:9px;height:9px;border-radius:50%;background:var(--pline)}
+.urlrow{display:flex;align-items:center;flex-wrap:wrap;gap:2px;font:.82rem var(--mono);color:var(--pmuted);margin-bottom:18px;word-break:break-all}
+.urlrow input{font:inherit;color:var(--pink);background:transparent;border:1px solid var(--pline);border-radius:8px;padding:8px 10px;width:11em;max-width:100%}
+.try :focus-visible{outline-color:#7cc4a0}
+.counter{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.num{font:500 clamp(3rem,9vw,4.5rem)/1 var(--serif);letter-spacing:-.03em;font-variant-numeric:tabular-nums;min-height:1em}
+.num.tick{animation:tick .35s ease-out}
+@keyframes tick{from{transform:translateY(6px);opacity:.3}to{transform:none;opacity:1}}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{font:500 .95rem var(--sans);border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 16px;cursor:pointer;text-decoration:none;display:inline-block}
+button:hover,.btn:hover{border-color:var(--muted)}
+button.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button.primary:hover{opacity:.88}
+.try button{background:transparent;color:var(--pink);border-color:var(--pline)}
+.try button:hover{border-color:var(--pmuted)}
+.try button.primary{background:var(--pink);color:var(--panel);border-color:var(--pink)}
+button.sm{padding:5px 11px;font-size:.82rem;border-radius:8px}
+.raw{margin:18px 0 0;padding:14px 0 0;border-top:1px solid var(--pline);font:.78rem/1.5 var(--mono);color:var(--pmuted);white-space:pre-wrap;word-break:break-all;background:none;border-left:0;border-right:0;border-bottom:0;border-radius:0}
+.note{font-size:.88rem;color:var(--muted);margin:14px 0 0}
+
+/* stats strip */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:16px;margin:8px 0 48px;background:var(--surface)}
+.stats div{padding:20px 24px;border-left:1px solid var(--line)}
+.stats div:first-child{border-left:0}
+.stats strong{display:block;font:500 1.9rem/1.2 var(--serif);font-variant-numeric:tabular-nums}
+.stats span{font-size:.85rem;color:var(--muted)}
+@media(max-width:560px){.stats{grid-template-columns:1fr}.stats div{border-left:0;border-top:1px solid var(--line)}.stats div:first-child{border-top:0}}
+
+/* sections */
+section{padding:56px 0;border-top:1px solid var(--line)}
+h2{font:500 1.8rem/1.2 var(--serif);letter-spacing:-.01em;margin:0 0 14px}
+h3{font:600 1rem var(--sans);margin:0}
+p{margin:0 0 14px}
+.muted{color:var(--muted)}
+pre{background:var(--code);border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:.84rem;line-height:1.6;margin:12px 0 0;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:inherit}
+.callout{border-left:3px solid var(--warn);padding:2px 0 2px 16px;margin:20px 0;color:var(--muted)}
+.callout b{color:var(--ink)}
+
+.tabs{display:flex;gap:4px;margin-top:20px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;white-space:nowrap;border:0;background:none;color:var(--muted);border-radius:8px 8px 0 0;padding:8px 14px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tabs+pre{margin-top:0;border-top-left-radius:0;border-top-right-radius:0;border-top:0}
+
+/* endpoints */
+.ep{padding:22px 0;border-top:1px solid var(--line)}
+.ep:first-of-type{border-top:0;padding-top:8px}
+.ep header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.ep .path{font:600 .95rem var(--mono);word-break:break-all}
+.ep p{color:var(--muted);margin-bottom:8px}
+.ep .res{font:.8rem/1.55 var(--mono);color:var(--muted);margin:0;white-space:pre-wrap;word-break:break-all}
+.ep .out{display:none;margin-top:10px}.ep .out.on{display:block}
+ul.opts{margin:6px 0 0;padding-left:20px;color:var(--muted)}
+ul.opts li{margin:3px 0}
+
+/* playground */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin:22px 0}
+.pg label{display:flex;flex-direction:column;gap:5px;font-size:.85rem;color:var(--muted)}
+.pg input,.pg select{font:.95rem var(--sans);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 12px;width:100%}
+.pg input[type=color]{padding:3px;height:42px}
+@media(max-width:560px){.pg{grid-template-columns:1fr}}
+.preview{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.preview img{height:20px}
+.copy{margin-top:20px}
+.copy .row{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--muted)}
+
+/* stack + faq */
+.stack{font:.88rem/1.9 var(--mono);color:var(--muted);background:var(--code);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-top:14px}
+.stack i{color:var(--ink);font-style:normal}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;padding:6px 0;min-height:44px;align-items:center;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--muted);font-weight:400;font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"\2212"}
+details p{margin:10px 0 0;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--muted);font-size:.88rem}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(pointer:coarse){button,.btn{min-height:44px}button.sm,.btn.sm{min-height:40px;display:inline-flex;align-items:center}.pg input,.pg select{min-height:44px}}
+@media(max-width:420px){.wrap{padding:0 18px}nav .wrap{gap:16px}.try{padding:18px 16px}.btns{width:100%}.btns button{flex:1}.preview{padding:18px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">Count API</a>
+    <a href="#start" class="opt">Quick start</a>
+    <a href="#endpoints">Endpoints</a>
+    <a href="#shields">Shields</a>
+    <a href="#faq" class="opt">FAQ</a>
+    <a href="https://stats.uptimerobot.com/qTeFyzz83B/803060687" class="opt">Uptime</a>
+    <a href="https://github.com/syntaxerror019/countapi/">GitHub</a>
+  </div>
+</nav>
+
+<main id="top">
+<div class="wrap wide">
+  <div class="hero">
+    <div>
+      <h1>Counting made effortless. And it’s free.</h1>
+      <p class="lede">Track page views, clicks, downloads, anything. <b>No signup. No API keys.</b> Pick a name, hit a URL, get a number.</p>
+      <div class="cta">
+        <a class="btn solid" href="#start">Get started</a>
+        <a class="btn" href="https://github.com/syntaxerror019/countapi/">View on GitHub</a>
+      </div>
+      <div class="pills"><span id="statusPill"><i class="dot"></i><b>Checking status</b></span><span>Open source</span><span>Public counters</span></div>
+    </div>
+
+    <div>
+      <div class="try" aria-label="Live demo">
+        <div class="bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="urlrow">
+          <span>GET /api/v1/<span id="demoVerb">get</span>/</span>
+          <input id="demoKey" value="try_me_out" aria-label="Counter key" spellcheck="false" autocomplete="off" maxlength="64">
+        </div>
+        <div class="counter">
+          <div class="num" id="demoNum" aria-live="polite">–</div>
+          <div class="btns">
+            <button class="primary" id="demoHit">Add 1</button>
+            <button id="demoGet">Just look</button>
+          </div>
+        </div>
+        <pre class="raw" id="demoRaw">Loading the current count…</pre>
+      </div>
+      <p class="note">Counters are public and shared. Anyone who knows a key can read it.</p>
+    </div>
+  </div>
+
+  <div class="stats" id="stats">
+    <div><strong id="s-req">–</strong><span>Requests served</span></div>
+    <div><strong id="s-keys">–</strong><span>Counters created</span></div>
+    <div><strong id="s-up">99.992%</strong><span>Uptime over the last 90 days</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="start">
+    <h2>Quick start</h2>
+    <p>A counter is just a key. There’s nothing to register, so the first request creates it. Because there are no namespaces, use something unlikely to collide, like <code>my_super_unique_counter</code>.</p>
+    <p>Visit or fetch this URL to add 1:</p>
+    <pre><code>https://countapi.mileshilliard.com/api/v1/hit/your_unique_key
+
+{
+  "key": "your_unique_key",
+  "message": "Key updated successfully",
+  "value": "3"
+}</code></pre>
+
+    <div class="tabs" role="tablist" aria-label="Examples">
+      <button role="tab" aria-selected="true" data-tab="js">JavaScript</button>
+      <button role="tab" aria-selected="false" data-tab="pixel">Tracking pixel</button>
+      <button role="tab" aria-selected="false" data-tab="curl">cURL</button>
+      <button role="tab" aria-selected="false" data-tab="py">Python</button>
+    </div>
+    <pre id="tabCode"><code></code></pre>
+
+    <div class="callout"><b>Heads up:</b> every key and value is public. Never store anything confidential.</div>
+  </section>
+
+  <section id="endpoints">
+    <h2>Endpoints</h2>
+    <p class="muted">Everything lives under <code>/api/v1</code>. Each “Try it” runs against the key from the demo above.</p>
+
+    <div class="ep">
+      <header><span class="path">/api/v1/get/<i>your_key</i></span><button class="sm" data-try="get">Try it</button></header>
+      <p>Read the current value without changing it. Ideal for displaying a count.</p>
+      <pre class="res">200  { "key": "your_key", "message": "Key requested successfully", "value": "3" }
+404  { "error": "Key not found" }</pre>
+      <pre class="out"></pre>
+    </div>
+
+    <div class="ep">
+      <header><span class="path">/api/v1/hit/<i>your_key</i></span><button class="sm" data-try="hit">Try it</button></header>
+      <p>Add exactly 1. The one you’ll use most for views, clicks, and events.</p>
+      <pre class="res">200  { "key": "your_key", "message": "Key updated successfully", "value": "101" }
+400  { "error": "No value provided" }</pre>
+      <pre class="out"></pre>
+    </div>
+
+    <div class="ep">
+      <header><span class="path">/api/v1/set/<i>your_key</i>?value=100</span><button class="sm" data-try="set">Try it</button></header>
+      <p>Set a key to a specific number. Useful for resetting, or syncing with another database.</p>
+      <pre class="res">200  { "key": "your_key", "message": "Key set successfully", "old_value": "4", "value": "100" }
+400  { "error": "No value provided" }</pre>
+      <pre class="out"></pre>
+    </div>
+
+    <div class="ep">
+      <header><span class="path">/api/v1/{get,hit}/<i>your_key</i>/shield</span><a class="btn sm" href="#shields">Open generator</a></header>
+      <p>An SVG badge showing your count. <code>get</code> only displays it; <code>hit</code> adds 1 every time the badge loads.</p>
+      <ul class="opts">
+        <li><code>text</code> the label on the left, such as “visits”</li>
+        <li><code>bgcolor</code> hex color of the right side, such as ff0000</li>
+        <li><code>textcolor</code> hex color of the text, such as ffffff</li>
+        <li><code>style</code> either <code>flat</code> or <code>plastic</code></li>
+      </ul>
+    </div>
+
+    <div class="ep">
+      <header><span class="path">/api/v1/status</span><button class="sm" data-try="status">Try it</button></header>
+      <p>Current status of the API.</p>
+      <pre class="res">200  { "message": "API is running", "uptime": "0:00:00" }</pre>
+      <pre class="out"></pre>
+    </div>
+
+    <div class="ep">
+      <header><span class="path">/health</span><button class="sm" data-try="health">Try it</button></header>
+      <p>A simple endpoint to ping from your own uptime monitor.</p>
+      <pre class="res">200  { "message": "API is healthy" }
+500  N/A</pre>
+      <pre class="out"></pre>
+    </div>
+  </section>
+
+  <section id="shields">
+    <h2>Shield generator</h2>
+    <p class="muted">Design a badge for your README or site, then copy the embed code.</p>
+
+    <div class="pg">
+      <label>Key name<input id="pKey" value="my_project_views" spellcheck="false" autocomplete="off"></label>
+      <label>Label<input id="pText" value="views"></label>
+      <label>Background color<input id="pBg" type="color" value="#2f6b4f"></label>
+      <label>Text color<input id="pFg" type="color" value="#ffffff"></label>
+      <label>Style<select id="pStyle"><option value="flat">Flat</option><option value="plastic">Plastic (3D)</option></select></label>
+      <label>Behavior<select id="pMode"><option value="get">Display only</option><option value="hit">Add 1 on every load</option></select></label>
+    </div>
+
+    <div class="preview">
+      <img id="pImg" alt="Shield preview">
+      <button id="pRefresh" class="sm">Reload preview</button>
+    </div>
+
+    <div class="copy"><div class="row"><span>Markdown</span><button class="sm" data-copy="pMd">Copy</button></div><pre><code id="pMd"></code></pre></div>
+    <div class="copy"><div class="row"><span>HTML</span><button class="sm" data-copy="pHtml">Copy</button></div><pre><code id="pHtml"></code></pre></div>
+    <p class="note">For READMEs, use <b>Display only</b> unless you want every viewer, and every crawler, to count.</p>
+  </section>
+
+  <section id="how">
+    <h2>How it’s built</h2>
+    <p class="muted">Small on purpose, so it stays fast.</p>
+    <div class="stack">
+      <i>Ubuntu VPS</i><br>
+      &nbsp;&nbsp;└ <i>Python Uvicorn app</i><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;├ Limiter (rate limiting)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;├ Core endpoints (get, set, hit, shield)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;└ <i>Redis</i> (in-memory key/value store)
+    </div>
+    <p style="margin-top:18px" class="muted">Open source on <a href="https://github.com/syntaxerror019/countapi/">GitHub</a>. A modern alternative to the classic countapi.xyz, and not affiliated with it.</p>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <details><summary>What is this for?</summary><p>A simple, free way to keep counts using unique keys: site visits, button clicks, app events, download totals.</p></details>
+    <details><summary>How do I use it on my website?</summary><p>Call an endpoint with <code>fetch()</code> in a script tag, or drop the URL into an image tag as a hidden tracking pixel. See the quick start above.</p></details>
+    <details><summary>Is there rate limiting?</summary><p>Yes. It used to be unlimited, but someone ruined that for everybody else. The limit is still extremely generous.</p></details>
+    <details><summary>Can I delete or hide a key?</summary><p>No. Keys never expire and anyone who knows the name can read them. To “delete” one, stop using it and start a new, unique key.</p></details>
+    <details><summary>Will I break it?</summary><p>Please email me before you try. If you wouldn’t mind.</p></details>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 <a href="https://www.mileshilliard.com/">Miles Hilliard</a></span>
+    <span><a href="https://stats.uptimerobot.com/qTeFyzz83B/803060687">Uptime</a> · <a href="https://github.com/syntaxerror019/countapi/">GitHub</a> · <a href="https://www.mileshilliard.com/">Contact</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var API = 'https://countapi.mileshilliard.com';
+  var $ = function(id){return document.getElementById(id)};
+  var key = function(v){return encodeURIComponent((v||'').trim() || 'try_me_out')};
+
+  function call(path){
+    return fetch(API + path).then(function(r){
+      return r.text().then(function(t){
+        var j; try{ j = JSON.parse(t) }catch(e){}
+        return {ok:r.ok, status:r.status, json:j, text:t};
+      });
+    });
+  }
+
+  /* hero demo */
+  function demo(kind, quiet){
+    var raw = $('demoRaw'), num = $('demoNum');
+    $('demoVerb').textContent = kind;
+    if(!quiet) raw.textContent = 'Requesting…';
+    call('/api/v1/' + kind + '/' + key($('demoKey').value)).then(function(r){
+      raw.textContent = r.status + '  ' + (r.json ? JSON.stringify(r.json) : r.text);
+      var v = r.json && r.json.value;
+      if(v === undefined && r.status === 404){ v = 0; raw.textContent += '\nNo counter with this name yet. Press “Add 1” to create it.'; }
+      if(v !== undefined){
+        num.textContent = Number(v).toLocaleString();
+        num.classList.remove('tick'); void num.offsetWidth; num.classList.add('tick');
+      } else { num.textContent = '–'; }
+    }).catch(function(){ raw.textContent = 'Could not reach the API. Check your connection and try again.'; });
+  }
+  $('demoHit').onclick = function(){demo('hit')};
+  $('demoGet').onclick = function(){demo('get')};
+  var kt; $('demoKey').addEventListener('input', function(){ clearTimeout(kt); kt = setTimeout(function(){ demo('get') }, 450); });
+  demo('get', true);
+
+  /* quick start tabs */
+  var snippets = {
+    js: "fetch('https://countapi.mileshilliard.com/api/v1/hit/mysite_visits')\n  .then(res => res.json())\n  .then(data => console.log('This page has ' + data.value + ' visits!'));",
+    pixel: '<!-- No JavaScript required -->\n<img src="https://countapi.mileshilliard.com/api/v1/hit/mysite_visits"\n     style="display:none;" alt="">',
+    curl: "curl https://countapi.mileshilliard.com/api/v1/hit/mysite_visits",
+    py: "import requests\n\nr = requests.get('https://countapi.mileshilliard.com/api/v1/hit/mysite_visits')\nprint(r.json()['value'])"
+  };
+  var tabs = document.querySelectorAll('[data-tab]');
+  function showTab(name){
+    tabs.forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab === name) });
+    document.querySelector('#tabCode code').textContent = snippets[name];
+  }
+  tabs.forEach(function(b){ b.onclick = function(){ showTab(b.dataset.tab) } });
+  showTab('js');
+
+  /* endpoint try-its */
+  document.querySelectorAll('[data-try]').forEach(function(b){
+    b.onclick = function(){
+      var k = key($('demoKey').value), t = b.dataset.try;
+      var path = {get:'/api/v1/get/'+k, hit:'/api/v1/hit/'+k, set:'/api/v1/set/'+k+'?value=100', status:'/api/v1/status', health:'/health'}[t];
+      var out = b.closest('.ep').querySelector('.out');
+      out.classList.add('on'); out.textContent = 'Requesting…';
+      call(path).then(function(r){
+        out.textContent = 'GET ' + path + '\n' + r.status + '  ' + (r.json ? JSON.stringify(r.json, null, 2) : r.text);
+      }).catch(function(){ out.textContent = 'Could not reach the API.' });
+    };
+  });
+
+  /* shield generator */
+  function shield(){
+    var k = key($('pKey').value), mode = $('pMode').value;
+    var q = '?text=' + encodeURIComponent($('pText').value || 'count') +
+            '&bgcolor=' + $('pBg').value.slice(1) +
+            '&textcolor=' + $('pFg').value.slice(1) +
+            '&style=' + $('pStyle').value;
+    var url = API + '/api/v1/' + mode + '/' + k + '/shield' + q;
+    $('pImg').src = url;
+    $('pMd').textContent = '![' + ($('pText').value || 'count') + '](' + url + ')';
+    $('pHtml').textContent = '<img src="' + url + '" alt="' + ($('pText').value || 'count') + '">';
+  }
+  ['pKey','pText','pBg','pFg','pStyle','pMode'].forEach(function(id){ $(id).addEventListener('input', shield) });
+  $('pRefresh').onclick = shield;
+  shield();
+
+  /* copy buttons */
+  document.querySelectorAll('[data-copy]').forEach(function(b){
+    b.onclick = function(){
+      var txt = $(b.dataset.copy).textContent, old = b.textContent;
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){
+        b.textContent = 'Copied'; setTimeout(function(){ b.textContent = old }, 1400);
+      }).catch(function(){ b.textContent = 'Press Ctrl+C'; });
+    };
+  });
+
+  /* live stats from /api/v1/status */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function countUp(el, to){
+    if(reduce || !isFinite(to)){ el.textContent = Number(to).toLocaleString(); return; }
+    var t0 = performance.now(), dur = 1400;
+    (function step(t){
+      var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * e).toLocaleString();
+      if(p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  call('/api/v1/status').then(function(r){
+    var d = r.json; if(!d) return;
+    if(typeof d.total_requests === 'number') countUp($('s-req'), d.total_requests);
+    if(typeof d.total_keys === 'number') countUp($('s-keys'), d.total_keys);
+    var pill = $('statusPill');
+    if(d.status === 'operational'){
+      pill.classList.add('ok');
+      pill.querySelector('b').textContent = 'Operational' + (d.version ? ' · v' + d.version : '');
+    } else {
+      pill.querySelector('b').textContent = d.status || 'Status unknown';
+    }
+  }).catch(function(){
+    $('statusPill').querySelector('b').textContent = 'Status unavailable';
+  });
+})();
+</script>
+</body>
+</html>
